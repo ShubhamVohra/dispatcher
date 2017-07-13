@@ -11,7 +11,7 @@ declare var google:any;
 })
 export class HomeComponent implements OnInit {
   @ViewChild('map') mapElement: ElementRef;
-  title: string = 'My first AGM project';
+  
   lat: number;
   lng: number;
   map:any;
@@ -51,14 +51,21 @@ export class HomeComponent implements OnInit {
     });
 
   }
+
+
   ngAfterViewInit() {
     console.log("afterinit");
     setTimeout(() => {
       this.initMap();
     }, 1000);
   }
+
+
   initMap(){
     var latlng = new google.maps.LatLng(39.305, -76.617);
+    let bounds = new google.maps.LatLngBounds();
+
+    
     this.map = new google.maps.Map(this.mapElement.nativeElement,{
       zoom:7,
       center:latlng
@@ -69,26 +76,46 @@ export class HomeComponent implements OnInit {
 
       var lat = this.requests[i].address.geometry.coordinates.lat;
       var lng = this.requests[i].address.geometry.coordinates.lng;
+      var  title = '<b>' + 'Client Name : ' + '</b>' + this.requests[i].clientid + '<br>' +
+                   '<b>' + 'Service Type : ' + '</b>' + this.requests[i].reqdesc + '<br>' +
+                   '<b>' + 'Service Status : ' + '</b>' + this.requests[i].status;
+      
 
-      var  title = this.requests[i].clientid;
-
+      let infoWindow = new google.maps.InfoWindow();
       let marker = new google.maps.Marker({
         'position':{'lat':lat,'lng':lng},
         'zoom':15,
         'map':this.map,
-        'draggable':true,
+        'draggable':false,
         'title':title
       });
+
       this.markers.push(marker);
+      bounds.extend(marker.position);
+
       marker.addListener('click',()=>{
-        infoWindow.open(this.map,marker);
+        this.populateInfoWindow(marker,infoWindow);
       }); 
+
+      google.maps.event.addListener(marker, 'click', function() {
+      
+         this.infowindow.open(this.map, marker);
+      });
+
+      this.map.fitBounds(bounds);
     }
 
-    let infoWindow = new google.maps.InfoWindow({
-      content:'<b>' + 'Shubham Vohra' + '</b>'
-    });
+    
 
     
+  }
+
+  populateInfoWindow(marker,infoWindow){
+    console.log("Title of the marker "+marker.title);
+    if(infoWindow.marker!=marker){
+      infoWindow.marker = marker;
+      infoWindow.setContent('<div>' + marker.title + '</div>' + 'Address' +marker.getPosition());
+      infoWindow.open(this.map,marker);
+    }
   }
 }
