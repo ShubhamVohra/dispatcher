@@ -1,0 +1,8 @@
+<h1>Google Maps </h1>
+<div #map id="map" ></div>
+
+<div *ngFor="let request of requests">
+    <div>
+        {{request.address.geometry.coordinates.lat}}
+    </div>
+</div>

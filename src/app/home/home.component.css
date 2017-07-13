@@ -1,0 +1,12 @@
+#map{
+    height: 75%;
+    width: 50%;
+    float: right !important;
+    position: absolute;
+}
+#showarea{
+  float: right;  
+}
+.showareatext{
+    padding: 2px 20px 13px 22px;
+}
