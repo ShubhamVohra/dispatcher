@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { ClientService } from '../services/clients/client.service';
 import { RequestService } from '../services/requests/request.service'; 
-import {MdListModule,MdIconModule} from '@angular/material';
+import {MdListModule,MdIconModule,MdButtonModule} from '@angular/material';
 import { GeocodeService } from '../services/geocoder/geocode.service';
 
 @NgModule({
@@ -20,7 +20,8 @@ import { GeocodeService } from '../services/geocoder/geocode.service';
     FormsModule,
     HttpModule,
     MdListModule,
-    MdIconModule
+    MdIconModule,
+    MdButtonModule
   ],
   providers: [
     ClientService,

@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
   state:string= 'Active';
   markers = [];
   address:string;
-
+  lastOpenedInfoWindow:any;
   requests:[{
     actype:string,
     capacity:string,
@@ -42,7 +42,7 @@ export class HomeComponent implements OnInit {
     location:string
   }
   ];
-  
+  bounds = new google.maps.LatLngBounds();
   
   constructor(private clientservice:ClientService,private requestservice:RequestService, private geocodeService:GeocodeService) { }
 
@@ -72,7 +72,7 @@ export class HomeComponent implements OnInit {
 
   initMap(){
     var latlng = new google.maps.LatLng(39.305, -76.617);
-    let bounds = new google.maps.LatLngBounds();
+    
 
     
     this.map = new google.maps.Map(this.mapElement.nativeElement,{
@@ -83,26 +83,30 @@ export class HomeComponent implements OnInit {
     
     for(var i=0;i<this.requests.length;i++){
       
-      var lat = this.requests[i].address.geometry.coordinates.lat;
-      var lng = this.requests[i].address.geometry.coordinates.lng;
-      let geocoder = new google.maps.Geocoder;
-      var  title = '<b>' + 'Client Name : ' + '</b>' + this.requests[i].clientid + '<br>' +
-                   '<b>' + 'Service Type : ' + '</b>' + this.requests[i].reqtype + '<br>' +
-                   '<b>' + 'Service Status : ' + '</b>' + this.requests[i].status + '<br>';
       
-        geocoder.geocode({'location':{'lat':lat,'lng':lng}},function(results,status){
-        if(results[1]){
-           this.address = results[1].formatted_address;
-          
-           
-        }
-      });
+      this.addmarker(this.requests[i])
+      // google.maps.event.addListener(marker, 'click', function() {
+      
+      //    this.infowindow.open(this.map, marker);
+      // });
 
-     
-      
-      var  title = '<b>' + 'Client Name : ' + '</b>' + this.requests[i].clientid + '<br>' +
-                   '<b>' + 'Service Type : ' + '</b>' + this.requests[i].reqtype + '<br>' +
-                   '<b>' + 'Service Status : ' + '</b>' + this.requests[i].status + '<br>';
+      this.map.fitBounds(this.bounds);
+    }
+  }
+
+  infoshow(request){
+    console.log(request);
+    this.addmarker(request);
+    
+  }
+
+  addmarker(request){
+      var lat = request.address.geometry.coordinates.lat;
+      var lng = request.address.geometry.coordinates.lng;
+      let geocoder = new google.maps.Geocoder;
+      var  title = '<b>' + 'Client Name : ' + '</b>' + request.clientid + '<br>' +
+                   '<b>' + 'Service Type : ' + '</b>' + request.reqtype + '<br>' +
+                   '<b>' + 'Service Status : ' + '</b>' + request.status + '<br>';
       
       
       let infoWindow = new google.maps.InfoWindow();
@@ -117,23 +121,26 @@ export class HomeComponent implements OnInit {
 
      
       this.markers.push(marker);
-      bounds.extend(marker.position);
+      this.bounds.extend(marker.position);
 
       marker.addListener('click',()=>{
         this.populateInfoWindow(marker,infoWindow);
       }); 
-
-      // google.maps.event.addListener(marker, 'click', function() {
       
-      //    this.infowindow.open(this.map, marker);
-      // });
+  }
 
-      this.map.fitBounds(bounds);
+  openMarker(request){
+    for(var j=0; j<this.markers.length;j++){
+      let infoWindow = new google.maps.InfoWindow();
+      var pos = this.markers[j].getPosition();
+      var posi = request.address.geometry.coordinates;
+      if(pos.lat() == posi.lat && pos.lng() == posi.lng){
+        this.populateInfoWindow(this.markers[j],infoWindow);
+      }
     }
+      
+      
 
-    
-
-    
   }
 
   populateInfoWindow(marker,infoWindow){
@@ -144,13 +151,21 @@ export class HomeComponent implements OnInit {
       let point = marker.getPosition()
       this.geocodeService.addressForlatLng(point.lat(),point.lng())
         .subscribe((address: string) => {
-          console.log(address)
+         
+          this.closeLastOpenedInfoWindo();
           infoWindow.setContent('<div>' + marker.title + '<b>Address :</b>' +address + '</div>');
           infoWindow.open(this.map,marker);
+          this.lastOpenedInfoWindow = infoWindow;
         }, (error) => {
           //alert(error);
           console.error(error);
       });
+    }
+  }
+
+  closeLastOpenedInfoWindo() {
+    if (this.lastOpenedInfoWindow) {
+        this.lastOpenedInfoWindow.close();
     }
   }
 }
