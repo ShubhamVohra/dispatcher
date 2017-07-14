@@ -20,16 +20,10 @@
       "prefix": "app",
       "styles": [
         "styles.css"
-<<<<<<< HEAD
         
       ],
       "scripts": [
-        "../node_modules/jquery/dist/jquery.min.js"
-=======
-      ],
-      "scripts": [
-        
->>>>>>> 66d8148916b6f112cbe4ae79a742e31b10e8b149
+       
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {

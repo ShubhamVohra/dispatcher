@@ -89,21 +89,6 @@ export class HomeComponent implements OnInit {
                    '<b>' + 'Service Type : ' + '</b>' + this.requests[i].reqtype + '<br>' +
                    '<b>' + 'Service Status : ' + '</b>' + this.requests[i].status + '<br>';
       
-      var location=  geocoder.geocode({'location':{'lat':lat,'lng':lng}},function(results,status){
-        if(results[1]){
-           var address = results[1].formatted_address;
-           console.log(address);
-            return address;
-        }
-      });
-
-     
-      
-      var  title = '<b>' + 'Client Name : ' + '</b>' + this.requests[i].clientid + '<br>' +
-                   '<b>' + 'Service Type : ' + '</b>' + this.requests[i].reqtype + '<br>' +
-                   '<b>' + 'Service Status : ' + '</b>' + this.requests[i].status + '<br>' +
-                   '<b>' + 'Address : ' + '</b>' + console.log(location);
-      
       
       let infoWindow = new google.maps.InfoWindow();
 
