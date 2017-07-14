@@ -1,15 +1,15 @@
 <div class="left">
     <div class="client">
         <div class="client-header">Clients</div>
-        <md-list>
-            <md-list-item *ngFor="let request of requests">
-                
-                <h3 md-line> {{request.clientid}} </h3><p style="text-align: right;">{{request.date}}</p>
-                <h3 md-line>
-                   {{request.status}} 
-                </h3>
-            </md-list-item>
-        </md-list>
+            <md-list>
+                <md-list-item *ngFor="let request of requests">
+                        <h3 md-line> {{request.clientid}} </h3><p style="text-align: right;">{{request.date}}</p>
+                        <h3 md-line>
+                        {{request.status}} 
+                        </h3>
+                        <hr>
+                </md-list-item>
+            </md-list>
     </div>
 
     <div class="agent">

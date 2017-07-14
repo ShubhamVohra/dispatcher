@@ -7,30 +7,58 @@
 #showarea{
   float: right;  
 }
+
 .showareatext{
     padding: 2px 20px 13px 22px;
 }
+
 .client{
-    float: left; height: 50%; border: 1px solid gray; 
+    float: left; 
+    height: 50%; 
+    border: 1px solid gray; 
+    min-width: 302px;
 }
+
 .client-header{
-    padding: 25px; background-color: gray; color: white;  text-align: center; font-size: 25px;
+    padding: 25px; 
+    background-color: gray; 
+    color: white;  
+    text-align: center; 
+    font-size: 25px;
 }
+
 .agent{
-    float: left; height: 50%; border: 1px solid gray; margin-top: 15px;
+    float: left; 
+    height: 50%; 
+    border: 1px solid gray; 
+    margin-top: 15px; 
 }
+
 .agent-header{
-    padding: 25px; background-color: gray; color: white;  text-align: center; font-size: 25px;
+    padding: 25px;
+    background-color: gray;
+    color: white;  
+    text-align: center; 
+    font-size: 25px;
 }
+
 .content{
-    width: 75%; float: left; margin-top: 10px;
+    width: 75%; 
+    float: left; 
+    margin-top: 10px;
 }
+
 .row{
     width: 100%;
 }
+
 .left {
     width: 23%;
     padding-left: 10px;
     padding-top: 10px;
     float: left;
+}
+
+.mat-list-item{
+    border-bottom: 1px solid gainsboro;
 }
