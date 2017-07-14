@@ -1,7 +1,7 @@
 #map{
-    height: 75%;
-    width: 50%;
-    float: right !important;
+    height: 100%;
+    width: inherit;
+    
     position: absolute;
 }
 #showarea{
@@ -9,4 +9,13 @@
 }
 .showareatext{
     padding: 2px 20px 13px 22px;
+}
+.left{
+    width: 25%; float: left;
+}
+.content{
+    width: 70%; float: right;
+}
+.row{
+    width: 100%;
 }
