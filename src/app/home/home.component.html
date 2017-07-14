@@ -1,8 +1,12 @@
-<h1>Google Maps </h1>
-<div #map id="map" ></div>
-
-<div *ngFor="let request of requests">
-    <div>
-        {{request.address.geometry.coordinates.lat}}
-    </div>
+<div class="row">
+<div class="left">
+  <table class="table table-bordered" >
+    <tr *ngFor="let request of requests"><h4>Client Name</h4><p>{{request.clientid}}</p></tr>
+    
+  </table>
+        
+</div>  
+<div class="content">  
+<div #map id="map"></div>
+</div>
 </div>
