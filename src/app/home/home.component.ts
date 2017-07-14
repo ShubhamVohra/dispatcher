@@ -17,10 +17,12 @@ export class HomeComponent implements OnInit {
   map:any;
   state:string= 'Active';
   markers = [];
+  address:string;
 
   requests:[{
     actype:string,
     capacity:string,
+    reqtype:string,
     date:string,
     clientid:string,
     reqdesc:string,
@@ -34,7 +36,8 @@ export class HomeComponent implements OnInit {
           lng:number
         }
       }
-    }
+    },
+    location:string
   }
   ];
   
@@ -76,12 +79,26 @@ export class HomeComponent implements OnInit {
 
       var lat = this.requests[i].address.geometry.coordinates.lat;
       var lng = this.requests[i].address.geometry.coordinates.lng;
-      var  title = '<b>' + 'Client Name : ' + '</b>' + this.requests[i].clientid + '<br>' +
-                   '<b>' + 'Service Type : ' + '</b>' + this.requests[i].reqdesc + '<br>' +
-                   '<b>' + 'Service Status : ' + '</b>' + this.requests[i].status;
+      let geocoder = new google.maps.Geocoder;
       
+      var location=  geocoder.geocode({'location':{'lat':lat,'lng':lng}},function(results,status){
+        if(results[1]){
+           var address = results[1].formatted_address;
+           console.log(address);
+            return address;
+        }
+      });
 
+     
+      
+      var  title = '<b>' + 'Client Name : ' + '</b>' + this.requests[i].clientid + '<br>' +
+                   '<b>' + 'Service Type : ' + '</b>' + this.requests[i].reqtype + '<br>' +
+                   '<b>' + 'Service Status : ' + '</b>' + this.requests[i].status + '<br>' +
+                   '<b>' + 'Address : ' + '</b>' + console.log(location);
+      
+      
       let infoWindow = new google.maps.InfoWindow();
+
       let marker = new google.maps.Marker({
         'position':{'lat':lat,'lng':lng},
         'zoom':15,
@@ -90,6 +107,7 @@ export class HomeComponent implements OnInit {
         'title':title
       });
 
+     
       this.markers.push(marker);
       bounds.extend(marker.position);
 
@@ -98,9 +116,9 @@ export class HomeComponent implements OnInit {
       }); 
 
       google.maps.event.addListener(marker, 'click', function() {
-      
-         this.infowindow.open(this.map, marker);
+          infoWindow.open(this.map, marker);
       });
+      
 
       this.map.fitBounds(bounds);
     }
@@ -113,8 +131,9 @@ export class HomeComponent implements OnInit {
   populateInfoWindow(marker,infoWindow){
     console.log("Title of the marker "+marker.title);
     if(infoWindow.marker!=marker){
+      
       infoWindow.marker = marker;
-      infoWindow.setContent('<div>' + marker.title + '</div>' + 'Address' +marker.getPosition());
+      infoWindow.setContent('<div>' + marker.title + '</div>');
       infoWindow.open(this.map,marker);
     }
   }
