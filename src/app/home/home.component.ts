@@ -2,6 +2,7 @@ import { Component, OnInit,ElementRef,ViewChild  } from '@angular/core';
 import { AgmCoreModule } from '@agm/core';
 import { ClientService } from '../../services/clients/client.service';
 import { RequestService } from '../../services/requests/request.service';
+
 declare var google:any;
 
 @Component({
@@ -48,19 +49,15 @@ export class HomeComponent implements OnInit {
     this.clientservice.getClients().subscribe((clients)=>{
       console.log(clients);
     });
+
     this.requestservice.getRequests(this.state).subscribe((requests)=>{
       this.requests = requests;
+      this.initMap(); 
+      
       
     });
+    
 
-  }
-
-
-  ngAfterViewInit() {
-    console.log("afterinit");
-    setTimeout(() => {
-      this.initMap();
-    }, 1000);
   }
 
 
@@ -76,7 +73,7 @@ export class HomeComponent implements OnInit {
 
     
     for(var i=0;i<this.requests.length;i++){
-
+      
       var lat = this.requests[i].address.geometry.coordinates.lat;
       var lng = this.requests[i].address.geometry.coordinates.lng;
       let geocoder = new google.maps.Geocoder;

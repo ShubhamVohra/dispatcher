@@ -1,7 +1,7 @@
 #map{
     height: 100%;
     width: inherit;
-    
+    border:1px solid gray;
     position: absolute;
 }
 #showarea{
@@ -10,8 +10,17 @@
 .showareatext{
     padding: 2px 20px 13px 22px;
 }
-.left{
-    width: 25%; float: left;
+.client{
+    float: left; height: 50%; border: 1px solid gray;
+}
+.client-header{
+    padding: 25px; background-color: gray; color: white;  text-align: center; font-size: 25px;
+}
+.agent{
+    float: left; height: 50%; border: 1px solid gray; 
+}
+.agent-header{
+    padding: 25px; background-color: gray; color: white;  text-align: center; font-size: 25px;
 }
 .content{
     width: 70%; float: right;
@@ -19,3 +28,4 @@
 .row{
     width: 100%;
 }
+.left{ width: 25%}

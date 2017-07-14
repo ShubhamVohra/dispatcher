@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { ClientService } from '../services/clients/client.service';
 import { RequestService } from '../services/requests/request.service'; 
+import {MdListModule} from '@angular/material';
 
 
 @NgModule({
@@ -18,7 +19,7 @@ import { RequestService } from '../services/requests/request.service';
     BrowserModule,
     FormsModule,
     HttpModule,
-   
+    MdListModule
   ],
   providers: [
     ClientService,
