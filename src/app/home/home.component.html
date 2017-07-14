@@ -2,13 +2,14 @@
     <div class="client">
         <div class="client-header">Clients</div>
         <md-list>
-            <md-list-item *ngFor="let request of requests">
-                <h3 md-line> {{request.clientid}} </h3>
-                <p md-line>
-                    <span> {{request.status}} </span>
-                    <span class="demo-2"> {{request.status}} </span>
-                </p>
-                </md-list-item>
+            <md-list-item *ngFor="let request of requests"  >
+                
+                <h3 md-line > {{request.clientid}} </h3><p style="text-align: right;">{{request.date}}</p>
+                <h3 md-line>
+                   {{request.status}} 
+                </h3>
+                <button md-raised-button (click)="openMarker(request)">Find</button>
+            </md-list-item>
         </md-list>
     </div>
 
