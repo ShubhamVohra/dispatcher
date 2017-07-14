@@ -2,6 +2,8 @@ import { Component, OnInit,ElementRef,ViewChild  } from '@angular/core';
 import { AgmCoreModule } from '@agm/core';
 import { ClientService } from '../../services/clients/client.service';
 import { RequestService } from '../../services/requests/request.service';
+import { GeocodeService } from '../../services/geocoder/geocode.service';
+
 declare var google:any;
 
 @Component({
@@ -19,6 +21,7 @@ export class HomeComponent implements OnInit {
   markers = [];
 
   requests:[{
+    reqtype:string,
     actype:string,
     capacity:string,
     date:string,
@@ -39,15 +42,18 @@ export class HomeComponent implements OnInit {
   ];
   
   
-  constructor(private clientservice:ClientService,private requestservice:RequestService) { }
+  constructor(private clientservice:ClientService,private requestservice:RequestService, private geocodeService:GeocodeService) { }
 
   ngOnInit() {  
+    
+    
     this.clientservice.getClients().subscribe((clients)=>{
       console.log(clients);
     });
     this.requestservice.getRequests(this.state).subscribe((requests)=>{
       this.requests = requests;
-      
+      this.initMap();
+       console.log(this.requests.length);
     });
 
   }
@@ -55,9 +61,8 @@ export class HomeComponent implements OnInit {
 
   ngAfterViewInit() {
     console.log("afterinit");
-    setTimeout(() => {
-      this.initMap();
-    }, 1000);
+   
+    
   }
 
 
@@ -77,8 +82,8 @@ export class HomeComponent implements OnInit {
       var lat = this.requests[i].address.geometry.coordinates.lat;
       var lng = this.requests[i].address.geometry.coordinates.lng;
       var  title = '<b>' + 'Client Name : ' + '</b>' + this.requests[i].clientid + '<br>' +
-                   '<b>' + 'Service Type : ' + '</b>' + this.requests[i].reqdesc + '<br>' +
-                   '<b>' + 'Service Status : ' + '</b>' + this.requests[i].status;
+                   '<b>' + 'Service Type : ' + '</b>' + this.requests[i].reqtype + '<br>' +
+                   '<b>' + 'Service Status : ' + '</b>' + this.requests[i].status + '<br>';
       
 
       let infoWindow = new google.maps.InfoWindow();
@@ -97,10 +102,10 @@ export class HomeComponent implements OnInit {
         this.populateInfoWindow(marker,infoWindow);
       }); 
 
-      google.maps.event.addListener(marker, 'click', function() {
+      // google.maps.event.addListener(marker, 'click', function() {
       
-         this.infowindow.open(this.map, marker);
-      });
+      //    this.infowindow.open(this.map, marker);
+      // });
 
       this.map.fitBounds(bounds);
     }
@@ -114,8 +119,16 @@ export class HomeComponent implements OnInit {
     console.log("Title of the marker "+marker.title);
     if(infoWindow.marker!=marker){
       infoWindow.marker = marker;
-      infoWindow.setContent('<div>' + marker.title + '</div>' + 'Address' +marker.getPosition());
-      infoWindow.open(this.map,marker);
+      let point = marker.getPosition()
+      this.geocodeService.addressForlatLng(point.lat(),point.lng())
+        .subscribe((address: string) => {
+          console.log(address)
+          infoWindow.setContent('<div>' + marker.title + '<b>Address :</b>' +address + '</div>');
+          infoWindow.open(this.map,marker);
+        }, (error) => {
+          //alert(error);
+          console.error(error);
+      });
     }
   }
 }
