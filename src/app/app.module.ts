@@ -8,7 +8,7 @@ import { HomeComponent } from './home/home.component';
 import { ClientService } from '../services/clients/client.service';
 import { RequestService } from '../services/requests/request.service'; 
 import {MdListModule} from '@angular/material';
-
+import { GeocodeService } from '../services/geocoder/geocode.service';
 
 @NgModule({
   declarations: [
@@ -23,7 +23,8 @@ import {MdListModule} from '@angular/material';
   ],
   providers: [
     ClientService,
-    RequestService
+    RequestService,
+    GeocodeService
   ],
   bootstrap: [AppComponent]
 })

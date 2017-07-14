@@ -2,6 +2,7 @@ import { Component, OnInit,ElementRef,ViewChild  } from '@angular/core';
 import { AgmCoreModule } from '@agm/core';
 import { ClientService } from '../../services/clients/client.service';
 import { RequestService } from '../../services/requests/request.service';
+import { GeocodeService } from '../../services/geocoder/geocode.service';
 
 declare var google:any;
 
@@ -21,9 +22,9 @@ export class HomeComponent implements OnInit {
   address:string;
 
   requests:[{
+    reqtype:string,
     actype:string,
     capacity:string,
-    reqtype:string,
     date:string,
     clientid:string,
     reqdesc:string,
@@ -43,21 +44,29 @@ export class HomeComponent implements OnInit {
   ];
   
   
-  constructor(private clientservice:ClientService,private requestservice:RequestService) { }
+  constructor(private clientservice:ClientService,private requestservice:RequestService, private geocodeService:GeocodeService) { }
 
   ngOnInit() {  
+    
+    
     this.clientservice.getClients().subscribe((clients)=>{
       console.log(clients);
     });
 
     this.requestservice.getRequests(this.state).subscribe((requests)=>{
       this.requests = requests;
-      this.initMap(); 
-      
-      
+      this.initMap();
+       console.log(this.requests.length);
     });
     
 
+  }
+
+
+  ngAfterViewInit() {
+    console.log("afterinit");
+   
+    
   }
 
 
@@ -76,7 +85,9 @@ export class HomeComponent implements OnInit {
       
       var lat = this.requests[i].address.geometry.coordinates.lat;
       var lng = this.requests[i].address.geometry.coordinates.lng;
-      let geocoder = new google.maps.Geocoder;
+      var  title = '<b>' + 'Client Name : ' + '</b>' + this.requests[i].clientid + '<br>' +
+                   '<b>' + 'Service Type : ' + '</b>' + this.requests[i].reqtype + '<br>' +
+                   '<b>' + 'Service Status : ' + '</b>' + this.requests[i].status + '<br>';
       
       var location=  geocoder.geocode({'location':{'lat':lat,'lng':lng}},function(results,status){
         if(results[1]){
@@ -112,10 +123,10 @@ export class HomeComponent implements OnInit {
         this.populateInfoWindow(marker,infoWindow);
       }); 
 
-      google.maps.event.addListener(marker, 'click', function() {
-          infoWindow.open(this.map, marker);
-      });
+      // google.maps.event.addListener(marker, 'click', function() {
       
+      //    this.infowindow.open(this.map, marker);
+      // });
 
       this.map.fitBounds(bounds);
     }
@@ -130,8 +141,16 @@ export class HomeComponent implements OnInit {
     if(infoWindow.marker!=marker){
       
       infoWindow.marker = marker;
-      infoWindow.setContent('<div>' + marker.title + '</div>');
-      infoWindow.open(this.map,marker);
+      let point = marker.getPosition()
+      this.geocodeService.addressForlatLng(point.lat(),point.lng())
+        .subscribe((address: string) => {
+          console.log(address)
+          infoWindow.setContent('<div>' + marker.title + '<b>Address :</b>' +address + '</div>');
+          infoWindow.open(this.map,marker);
+        }, (error) => {
+          //alert(error);
+          console.error(error);
+      });
     }
   }
 }
