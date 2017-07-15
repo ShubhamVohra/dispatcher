@@ -62,3 +62,9 @@
 .mat-list-item{
     border-bottom: 1px solid gainsboro;
 }
+
+.mat-raised-button{
+    padding: 0px;
+    color: white;
+    background: gray;
+}

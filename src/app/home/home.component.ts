@@ -106,7 +106,8 @@ export class HomeComponent implements OnInit {
       let geocoder = new google.maps.Geocoder;
       var  title = '<b>' + 'Client Name : ' + '</b>' + request.clientid + '<br>' +
                    '<b>' + 'Service Type : ' + '</b>' + request.reqtype + '<br>' +
-                   '<b>' + 'Service Status : ' + '</b>' + request.status + '<br>';
+                   '<b>' + 'Service Status : ' + '</b>' + request.status + '<br>' +
+                   '<b>' + 'Date of Service : ' + '</b>' + request.date + '<br>' ;
       
       
       let infoWindow = new google.maps.InfoWindow();
