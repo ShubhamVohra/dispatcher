@@ -3,6 +3,8 @@ import { AgmCoreModule } from '@agm/core';
 import { ClientService } from '../../services/clients/client.service';
 import { RequestService } from '../../services/requests/request.service';
 import { GeocodeService } from '../../services/geocoder/geocode.service';
+import { Observable } from 'rxjs/Observable';
+import * as io from "socket.io-client";
 
 declare var google:any;
 
@@ -17,6 +19,7 @@ export class HomeComponent implements OnInit {
   lat: number;
   lng: number;
   map:any;
+ 
   state:string= 'Active';
   markers = [];
   address:string;
@@ -47,20 +50,40 @@ export class HomeComponent implements OnInit {
   constructor(private clientservice:ClientService,private requestservice:RequestService, private geocodeService:GeocodeService) { }
 
   ngOnInit() {  
-    
+     var createRequest;
     
     this.clientservice.getClients().subscribe((clients)=>{
       console.log(clients);
     });
-
+   
+   
     this.requestservice.getRequests(this.state).subscribe((requests)=>{
-      this.requests = requests;
-      this.initMap();
-       console.log(this.requests.length);
+        this.requests = requests;
+        this.initMap();
+        console.log(this.requests.length);
     });
-    
 
+    createRequest = this.getMessages().subscribe((message) => {
+        console.log("Phle"+this.requests);
+        let request:any = message;
+        this.requests.push(request); 
+        this.initMap();
+    });
+     
   }
+  
+  getMessages() { 
+    let observable = new Observable(observer => { 
+      let socket = io('http://10.100.1.4:3000',{transports: ['websocket', 'polling', 'flashsocket']}); 
+      socket.on('newrequest', (data) => { 
+        observer.next(data); 
+      }); 
+      return () => { 
+        socket.disconnect(); 
+      }; 
+    }) 
+    return observable; 
+  } 
 
 
   ngAfterViewInit() {
