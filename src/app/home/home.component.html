@@ -6,7 +6,7 @@
         <md-list>
             <md-list-item *ngFor="let request of requests"  >
                 
-                <h3 md-line > {{request.clientid}} </h3>
+                <h3 md-line > {{request.email}} </h3>
                 <h3 md-line>
                    {{request.status}} 
                 </h3>
@@ -22,7 +22,6 @@
                 <h3 md-line> {{request.clientid}} </h3>
                 <p md-line>
                     <span> {{request.status}} </span>
-                    <span class="demo-2"> {{request.status}} </span>
                 </p>
                 </md-list-item>
         </md-list>

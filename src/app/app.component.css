@@ -25,3 +25,8 @@ li a:hover {
     color: black;
     overflow: hidden;
 }
+body{
+    height: 100%;
+    position: fixed;
+    width: 100%;
+}
