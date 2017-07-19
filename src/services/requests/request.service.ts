@@ -8,7 +8,7 @@ export class RequestService {
   constructor(private http:Http) { }
 
   getRequests(status){
-    return this.http.get('http://10.100.1.4:3000/getRequests/'+status).map(res=>res.json());
+    return this.http.get('http://localhost:3000/getRequests/'+status).map(res=>res.json());
   }
 
 }

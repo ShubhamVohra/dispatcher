@@ -1,0 +1,17 @@
+<table id="jobs">
+  <tr>
+    <th>Request Type</th>
+    <th>CLient Name</th>
+    <th>Request Description</th>
+    <th>Status</th>
+  </tr>
+  
+  <tr *ngFor="let request of requests">
+    <td >{{request.reqtype}}</td>
+    <td>{{request.clientid}}</td>
+    <td>{{request.reqdesc}}</td>
+    <td>{{request.status}}</td>
+  </tr> 
+  
+</table>
+<router-outlet></router-outlet>

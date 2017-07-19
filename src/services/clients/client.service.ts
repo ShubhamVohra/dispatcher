@@ -8,7 +8,7 @@ export class ClientService {
   constructor(private http:Http) { }
 
   getClients(){
-    return this.http.get('http://10.100.1.4:3000/getClients').map(res=>res.json());
+    return this.http.get('http://localhost:3000/getClients').map(res=>res.json());
   }
 
 }

@@ -1,0 +1,19 @@
+<table id="customers">
+  <tr>
+    <th>Customer Name</th>
+    <th>Customer Phone Number</th>
+    <th>Details</th>
+  </tr>
+  
+  <tr *ngFor="let client of clients">
+    <td >{{client.username}}</td>
+    <td>{{client.phone}}</td>
+    <td><button md-raised-button >All Requests</button></td>
+  </tr>
+  <md-paginator [length]=""
+              [pageSize]="10"
+              [pageSizeOptions]="[5, 10, 25, 100]">
+  </md-paginator>
+</table>
+
+<router-outlet></router-outlet>
