@@ -1,0 +1,140 @@
+<div *ngIf="loading">
+  <md-spinner [color]="warn"></md-spinner>
+</div>
+<div style="float:right; margin-right:20px;">
+  <div *ngIf="!agentname" >
+    <h2>Default Calendar</h2>
+  </div>
+  <div *ngIf="agentname">
+    <h2>{{agentname}}'s Calendar</h2>
+  </div>
+</div>
+<div class="row">
+  <div class="agents" *ngFor="let agent of agents">
+    <img src="../../assets/images/avatar.png" (click)="openCalendar(agent)" alt="Avatar" style="width:100%">
+    <div class="container" >
+      <h4><b>{{agent.name}}</b></h4> 
+      <p>Engineer</p>
+      <span class="glyphicon glyphicon-menu-hamburger" (click)="openAgentJobs(agent,assignedjobs)"></span>
+    </div>
+  </div>
+</div>
+
+<div class="clearfix">
+
+</div>
+
+<ng-template #customCellTemplate let-day="day" let-locale="locale">
+  <div class="cal-cell-top">
+    <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
+    <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+  </div>
+  <small style="margin: 5px">{{ day.events.length }} events.</small>
+</ng-template>
+
+<div class="row">
+  <div class="col-md-3">
+    <div class="card" style="border:.5px solid gray; ">
+      <div class="card-header"> All Pending Jobs</div>
+        <div class="card-block">
+            <ul *ngIf="externalEvents">
+              <li class="external-events"
+                *ngFor="let event of externalEvents"
+                mwlDraggable
+                [dropData]="{event: event}"
+                style="position:relative; z-index: 10">
+                <p class="external-events-list"
+                  
+                  (click)="openJobDetails(event,requestdetails)"
+                  [style.color]="event.color.primary">
+                  {{ event.title }}
+                </p>
+              </li>
+            </ul>
+            <ul *ngIf="externalEvents == ''">
+              <h5>There are no pending requests.</h5>
+              
+            </ul>
+        </div>
+    </div>
+  </div>
+
+  <div class="col-md-9">
+    <mwl-demo-utils-calendar-header
+      [(view)]="view"
+      [(viewDate)]="viewDate">
+    </mwl-demo-utils-calendar-header>
+
+    <div [ngSwitch]="view">
+      <mwl-calendar-month-view
+        *ngSwitchCase="'month'"
+        [viewDate]="viewDate"
+        [events]="events"
+        [activeDayIsOpen]="activeDayIsOpen"
+        [refresh]="refresh"
+        (dayClicked)="dayClicked($event.day)"
+        (eventTimesChanged)="eventDropped($event,requestdetails)"
+        [cellTemplate]="customCellTemplate">
+      </mwl-calendar-month-view>
+      <mwl-calendar-week-view
+        *ngSwitchCase="'week'"
+        [viewDate]="viewDate"
+        [events]="events"
+        [refresh]="refresh"
+        (eventTimesChanged)="eventDropped($event,requestdetails)">
+      </mwl-calendar-week-view>
+      <mwl-calendar-day-view
+        *ngSwitchCase="'day'"
+        [viewDate]="viewDate"
+        [events]="events"
+        [refresh]="refresh"
+        [dayStartHour]="9"
+        (eventTimesChanged)="eventDropped($event)">
+      </mwl-calendar-day-view>
+    </div>
+  </div>
+
+</div>
+<ng-template #assignedjobs let-c="close" let-d="dismiss" >
+
+  <div  class="modal-header">
+    <h2 class="modal-title">Jobs assigned to {{assignedagentname}}</h2>
+  </div>
+
+  <div *ngIf="assignedrequests!=''">
+    <div class="modal-body" *ngFor="let request of assignedrequests">
+      <p class="assigned-requests">{{request.reqdesc}}</p><br>
+      <p class="assigned-requests">{{request.date}}</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="c('Close click')" >Close</button>
+    </div>
+  </div>
+
+  <div  *ngIf="assignedrequests ==''">
+    <div class="modal-body">
+      <p class="assigned-requests">There are no jobs assigned to {{assignedagentname}} yet.</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="c('Close click')" >Close</button>
+    </div>
+  </div>
+
+</ng-template>
+
+<ng-template #requestdetails let-c="close" let-d="dismiss" >
+
+  <div  class="modal-header">
+    <h2 class="modal-title">{{modalTitle}}</h2>
+  </div>
+
+  <div class="modal-body">
+    <p class="assigned-requests">{{modalContent}}</p><br>
+    <!-- <p class="assigned-requests">Date of Creation: </p><p style="font-size:15px;">Shubham Vohra</p> -->
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')" >OK</button>
+  </div>
+
+</ng-template>

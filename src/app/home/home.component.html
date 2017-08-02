@@ -3,6 +3,9 @@
 <div class="left">
     <div class="client">
         <div class="client-header">Requests</div>
+        <div *ngIf= "loading">
+            <md-spinner></md-spinner>
+        </div>
         <md-list>
             <md-list-item *ngFor="let request of requests"  >
                 
@@ -10,7 +13,7 @@
                 <h3 md-line>
                    {{request.status}} 
                 </h3>
-                <button md-raised-button (click)="openMarker(request)">Find on Map</button>
+                <button md-raised-button (click)="openMarker(request)">Track</button>
             </md-list-item>
         </md-list>
     </div>
@@ -18,10 +21,10 @@
     <div class="agent">
         <div class="agent-header">Agents</div>
         <md-list>
-            <md-list-item *ngFor="let request of requests">
-                <h3 md-line> {{request.clientid}} </h3>
+            <md-list-item *ngFor="let agent of agents">
+                <h3 md-line> {{agent.name}} </h3>
                 <p md-line>
-                    <span> {{request.status}} </span>
+                    <span> Engineer </span>
                 </p>
                 </md-list-item>
         </md-list>

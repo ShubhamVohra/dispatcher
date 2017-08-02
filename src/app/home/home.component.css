@@ -25,7 +25,7 @@
     background-color: gray; 
     color: white;  
     text-align: center; 
-    font-size: 25px;
+    font-size: 20px;
     font-weight: 900;
 }
 
@@ -42,7 +42,7 @@
     background-color: gray;
     color: white;  
     text-align: center; 
-    font-size: 25px;
+    font-size: 20px;
     font-weight: 900;
 }
 
@@ -74,4 +74,8 @@
 .mat-list{
     height: 233px;
     overflow: auto
+}
+
+.mat-spinner path{
+    stroke:gray !important;
 }

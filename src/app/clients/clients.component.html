@@ -1,19 +1,49 @@
+
 <table id="customers">
   <tr>
     <th>Customer Name</th>
     <th>Customer Phone Number</th>
     <th>Details</th>
   </tr>
-  
+  <div *ngIf="loading">
+    <md-spinner></md-spinner>
+  </div>
   <tr *ngFor="let client of clients">
     <td >{{client.username}}</td>
     <td>{{client.phone}}</td>
-    <td><button md-raised-button >All Requests</button></td>
+    <td><button md-raised-button (click)="openRequests(client.username,openAllRequests)">All Requests</button></td>
   </tr>
-  <md-paginator [length]=""
-              [pageSize]="10"
-              [pageSizeOptions]="[5, 10, 25, 100]">
-  </md-paginator>
 </table>
+
+<ng-template #openAllRequests let-c="close" let-d="dismiss" >
+
+  <div  class="modal-header">
+    <h2 class="modal-title">Jobs created by {{clientName}}</h2>
+  </div>
+
+  <div *ngIf="requests!=''">
+    <div class="modal-body" *ngFor="let request of requests">
+      <span class="glyphicon glyphicon-info-sign" style="float: left;margin-right: 10px;font-size: 19px;"></span>
+      <p class="assigned-requests">{{request.reqdesc}}</p>
+      <span class="glyphicon glyphicon-calendar" style="float: left;margin-right: 10px;font-size: 19px;"></span>
+      <p class="assigned-requests" >{{request.date}}</p>
+      <p class="assigned-requests">{{request.status}}</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="c('Close click')" >Close</button>
+    </div>
+  </div>
+
+  <div  *ngIf="requests ==''">
+    
+    <div class="modal-body">
+      <p class="assigned-requests">There are no jobs created by {{clientName}} yet.</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="c('Close click')" >Close</button>
+    </div>
+  </div>
+
+</ng-template>
 
 <router-outlet></router-outlet>

@@ -1,0 +1,96 @@
+
+h3 {
+  margin: 0 0 10px;
+}
+
+pre {
+  background-color: #f5f5f5;
+  padding: 15px;
+}
+.col-md-3{
+  margin-top: 100px;
+}
+.agents {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    width: 10%;
+    padding: 0px 15px;
+    float: left;
+    border: 1px solid #f1f1f1;
+    margin: 6px;
+    
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.container {
+    padding: 2px 5px;
+    width: 100%;
+}
+
+h4{
+  font-size:12px;
+  margin-top: 0px;
+  margin-bottom: 2px;
+  
+}
+p{
+  font-size: 10px;
+  display: inline;
+}
+.row{
+    margin: 10px;
+    padding: 10px;
+}
+.btn-primary {
+    color: #fff;
+    background-color: gray;
+    border-color: gray;
+}
+.modal-header{
+    background: darkgray;
+    color: white;
+}
+.modal-body{
+    padding:50px auto;
+    border-bottom: 1px solid lightgray;
+}
+
+.modal-footer{
+    padding: 5px;
+}
+.card-header{
+    padding:10px;
+    background: gray;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+}
+.external-events{
+    list-style-type: none;
+}
+.external-events-list{
+    font-size: 15px;   
+    color:black !important;
+    border-bottom: 1px solid lightgray;
+    line-height: 2;
+}
+ul{
+    padding-left: 5px;
+}
+.glyphicon{
+    font-size: 18px;
+    float: right;
+}
+.assigned-requests{
+    font-size: 15px;
+    font-weight: bold;
+}
+.btn-group{
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    background: gray !important;
+    border: gray;
+}

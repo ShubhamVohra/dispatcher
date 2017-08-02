@@ -1,3 +1,5 @@
+
+
 #customers {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
@@ -26,4 +28,28 @@
     padding: 0px;
     color: white;
     background: gray;
+}
+.assigned-requests{
+    font-size: 15px;
+    font-weight: bold;
+}
+.modal-header{
+    background: darkgray;
+    color: white;
+}
+.modal-body{
+    padding:50px auto;
+    border-bottom: 1px solid lightgray;
+}
+
+.modal-footer{
+    padding: 5px;
+}
+
+.btn:hover{
+    background: black;
+    color: white;
+}
+.mat-spinner{
+    margin-left:150%;
 }

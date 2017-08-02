@@ -24,6 +24,7 @@ li a:hover {
     background-color: white;
     color: black;
     overflow: hidden;
+    padding:  14px 16px;
 }
 body{
     height: 100%;
