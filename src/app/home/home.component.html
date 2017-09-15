@@ -8,12 +8,10 @@
         </div>
         <md-list>
             <md-list-item *ngFor="let request of requests"  >
-                
-                <h3 md-line > {{request.email}} </h3>
-                <h3 md-line>
-                   {{request.status}} 
-                </h3>
-                <button md-raised-button (click)="openMarker(request)">Track</button>
+                <h3 md-line > {{request.clientid}} </h3><br>
+                <h3 md-line>{{request.status}} </h3>
+                <span class="glyphicon glyphicon-map-marker" (click)="openMarker(request)" style="font-size:25px;"></span>&nbsp;&nbsp;&nbsp;
+                <span class="glyphicon glyphicon-info-sign" (click)="openRequestDetails(request,requestDetails)" style="font-size:25px;"></span>
             </md-list-item>
         </md-list>
     </div>
@@ -23,10 +21,9 @@
         <md-list>
             <md-list-item *ngFor="let agent of agents">
                 <h3 md-line> {{agent.name}} </h3>
-                <p md-line>
-                    <span> Engineer </span>
-                </p>
-                </md-list-item>
+                <p md-line><span> Engineer </span></p>
+                <span class="glyphicon glyphicon-info-sign" (click)="openAgentRequests(agent,agentAssignedRequests)" style="font-size:25px;"></span>
+            </md-list-item>
         </md-list>
     </div>
 </div>
@@ -34,5 +31,55 @@
 <div class="content">  
   <div #map id="map"></div>
 </div>
+
+<ng-template #requestDetails let-c="close" let-d="dismiss" >
+
+  <div  class="modal-header">
+    <h2 class="modal-title">Customer Name: {{clientName}}</h2>
+  </div>
+
+  <div class="modal-body">
+    <h4 class="heading">Request Description: </h4><p class="assigned-requests">{{requestDescription}}</p><br><hr>
+    <h4 class="heading">Request Status: </h4><p class="assigned-requests">{{requestStatus}}</p><br><hr>
+    <h4 class="heading">Date of Service: </h4><p class="assigned-requests">{{requestDateOfService}}</p><br><hr>
+    <h4 class="heading">Creation Date: </h4><p class="assigned-requests">{{requestCreateDate}}</p><br><hr>
+    <h4 class="heading">Address: </h4><p class="assigned-requests">{{requestAddress}}</p><br><hr>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')" >OK</button>
+  </div>
+
+</ng-template>
+
+<ng-template #agentAssignedRequests let-c="close" let-d="dismiss" >
+
+  <div  class="modal-header">
+    <h2 class="modal-title">Jobs assigned to {{agentName}}</h2>
+  </div>
+
+  <div *ngIf="agentRequests!=''">
+    <div class="modal-body" *ngFor="let request of agentRequests">
+      <span class="glyphicon glyphicon-info-sign" style="float: left;margin-right: 10px;font-size: 19px;"></span>
+      <p class="assigned-requests">{{request.reqdesc}}</p><br><br>
+      <span class="glyphicon glyphicon-calendar" style="float: left;margin-right: 10px;font-size: 19px;"></span>
+      <p class="assigned-requests" >{{request.date}}</p>
+      
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="c('Close click')" >Close</button>
+    </div>
+  </div>
+
+  <div  *ngIf="agentRequests ==''">
+    <div class="modal-body">
+      <p class="assigned-requests">There are no jobs assigned to {{agentName}} yet.</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="c('Close click')" >Close</button>
+    </div>
+  </div>
+
+</ng-template>
 
 <router-outlet></router-outlet>

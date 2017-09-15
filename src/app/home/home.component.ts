@@ -4,6 +4,7 @@ import { ClientService } from '../../services/clients/client.service';
 import { RequestService } from '../../services/requests/request.service';
 import { GeocodeService } from '../../services/geocoder/geocode.service';
 import { Observable } from 'rxjs/Observable';
+import { NgbDateStruct,NgbTimeStruct,NgbModal,ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import * as io from "socket.io-client";
 
 
@@ -27,6 +28,16 @@ export class HomeComponent implements OnInit {
   lastOpenedInfoWindow:any;
   agentPosition:any;
   loading:boolean = true;
+  requestDescription:string;
+  requestStatus:string;
+  requestDateOfService:string;
+  requestCreateDate:Date;
+  clientName:string;
+  requestAddress:string;
+  agentName:string;
+  agentUsername:string;
+  agentRequests=[];
+  count:number =0;
 
   marker:{
     "position":{
@@ -72,7 +83,8 @@ export class HomeComponent implements OnInit {
 
   bounds = new google.maps.LatLngBounds();
   
-  constructor(private clientservice:ClientService,private requestservice:RequestService, private geocodeService:GeocodeService) { }
+  constructor(private clientservice:ClientService,private requestservice:RequestService,
+              private geocodeService:GeocodeService,private model:NgbModal) { }
 
   ngOnInit() {  
      var createRequest;
@@ -106,25 +118,37 @@ export class HomeComponent implements OnInit {
 
     
      updateAgentLocation = this.getAgentLocation().subscribe((location)=>{
+
+         
         var self = this;
         let infoWindow = new google.maps.InfoWindow();
         this.agentPosition = location;
+        console.log(this.agentMarkers);
         if(this.agentMarkers.length >0){
-          console.log(this.agentMarkers);
+          
           var i=0;
           for (var marker  in this.agentMarkers) {
-              console.log(marker);
+
+              var diff = (new Date().getTime() - this.agentMarkers[marker].time.getTime())/1000;
+
+             
               if(this.agentPosition.sa ==  this.agentMarkers[marker].title){
+
                   var latlng = new google.maps.LatLng(this.agentPosition.lat,this.agentPosition.lng);
                   this.agentMarkers[marker].setPosition(latlng);
                   i=1;
-                  console.log(this.agentMarkers[marker].title);
-                  infoWindow.setOptions({
-                    'position':latlng,
-                    'content':'<b>' + this.agentMarkers[marker].title
-                  });
-                  // infoWindow.open(this.map,this.agentMarkers[marker]);
+                  //infoWindow.open(this.map,this.agentMarkers[marker]);
+                  this.agentMarkers[marker].time = new Date();
+                  console.log(this.agentMarkers[marker].time);
+                  if(this.agentMarkers[marker].icon == "../assets/images/image_grey.jpg"){
+                    this.agentMarkers[marker].icon = "../assets/images/image.jpg";    
+                  }
               }
+
+              if(diff>300){
+                this.agentMarkers[marker].icon = "../assets/images/image_grey.jpg";
+              }
+              
           }
           if(i==0){
             
@@ -135,23 +159,24 @@ export class HomeComponent implements OnInit {
               'zoom':15,
               'map':this.map,
               'draggable':false,
-              'title':this.agentPosition.sa
+              'title':this.agentPosition.sa,
+              'time':new Date()
             });
             this.agentMarkers.push(marker);
             var latlng = new google.maps.LatLng(this.agentPosition.lat,this.agentPosition.lng);
 
             infoWindow.setOptions({
                     'position':latlng,
-                    'content':'<b>' + marker.title
+                    'content':'<b>' + this.agentPosition.name
               });
 
             infoWindow.open(this.map,marker);
             
           }
-          console.log(this.agentMarkers);
+          
         }
         else{
-          console.log("ELse");
+          
           let marker = new google.maps.Marker({
             'icon':"../assets/images/image.jpg",
             'animation': google.maps.Animation.DROP,
@@ -159,30 +184,28 @@ export class HomeComponent implements OnInit {
             'zoom':15,
             'map':this.map,
             'draggable':false,
-            'title':this.agentPosition.sa
+            'title':this.agentPosition.sa,
+            'time':new Date()
           });
 
           var latlng = new google.maps.LatLng(this.agentPosition.lat,this.agentPosition.lng);
           
           infoWindow.setOptions({
                     'position':latlng,
-                    'content':'<b>' + marker.title
+                    'content':'<b>' + this.agentPosition.name
               });
           // this.marker.position.lat = this.agentPosition.lat;
           // this.marker.position.lng = this.agentPosition.lng;
           // this.marker.draggable = false;
           // this.marker.map = this.map;
           // this.marker.title = this.agentPosition.sa;
-          console.log(marker);
+         
           this.agentMarkers.push(marker);
           infoWindow.open(this.map,marker);
           
         }
+      });
 
-        
-        
-    });
-     
   }
 
  
@@ -207,7 +230,7 @@ export class HomeComponent implements OnInit {
         'zoom':15,
         'map':this.map,
         'draggable':false
-        });
+    });
     console.log(this.agentPosition);
   }
   
@@ -238,12 +261,22 @@ export class HomeComponent implements OnInit {
     this.map = new google.maps.Map(this.mapElement.nativeElement,{
       "zoom":7,
       "center":latlng,
-      "clickableIcons":false
+      "clickableIcons":false,
+      "disableDefaultUI": true
     });
 
     
     for(var i=0;i<this.requests.length;i++){
       
+      this.geocodeService.addressForlatLng(this.requests[i].address.geometry.coordinates.lat,this.requests[i].address.geometry.coordinates.lng)
+        .subscribe((address: string) => {
+         this.requests[i].location = address;
+          
+        }, (error) => {
+          //alert(error);
+          console.log("fdwqd");
+          console.error(error);
+      });
       
       this.addmarker(this.requests[i])
       // google.maps.event.addListener(marker, 'click', function() {
@@ -269,7 +302,8 @@ export class HomeComponent implements OnInit {
       var  title = '<b>' + 'Client Name : ' + '</b>' + request.clientid + '<br>' +
                    '<b>' + 'Service Type : ' + '</b>' + request.reqtype + '<br>' +
                    '<b>' + 'Service Status : ' + '</b>' + request.status + '<br>' +
-                   '<b>' + 'Date of Service : ' + '</b>' + request.date + '<br>' ;
+                   '<b>' + 'Date of Service : ' + '</b>' + request.date + '<br>' + 
+                   '<b>' + 'Date of Service : ' + '</b>' + request.location + '<br>' ;
       
       
       let infoWindow = new google.maps.InfoWindow();
@@ -319,7 +353,7 @@ export class HomeComponent implements OnInit {
         .subscribe((address: string) => {
          
           this.closeLastOpenedInfoWindo();
-          infoWindow.setContent('<div>' + marker.title + '<b>Address :</b>' +address + '</div>');
+          infoWindow.setContent('<div>' + marker.title + '</div>');
           infoWindow.open(this.map,marker);
           this.lastOpenedInfoWindow = infoWindow;
         }, (error) => {
@@ -334,4 +368,41 @@ export class HomeComponent implements OnInit {
         this.lastOpenedInfoWindow.close();
     }
   }
+
+  openRequestDetails(request,requestDetails){
+    this.requestStatus = request.status;
+    this.clientName = request.clientid;
+    this.requestCreateDate = request.createdate;
+    this.requestDescription = request.reqdesc;
+    this.requestDateOfService = request.date;
+    this.geocodeService.addressForlatLng(request.address.geometry.coordinates.lat,request.address.geometry.coordinates.lng)
+        .subscribe((address: string) => {
+         this.requestAddress = address;
+          
+        }, (error) => {
+          //alert(error);
+          console.error(error);
+      });
+    this.model.open(requestDetails).result.then((result)=>{
+
+    },
+    (reason)=>{
+
+    });
+  }
+
+  openAgentRequests(agent,agentAssignedRequests){
+    this.agentRequests = [];
+    this.agentName = agent.name;
+    this.agentUsername = agent.username;
+    this.clientservice.getAssignedRequests(agent.username,"Active").subscribe((assgndRequests)=>{
+      this.agentRequests = assgndRequests;
+      this.model.open(agentAssignedRequests).result.then((result)=>{
+
+      });
+      
+    });
+    
+  }
+
 }

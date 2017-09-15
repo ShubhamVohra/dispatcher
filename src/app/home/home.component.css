@@ -79,3 +79,31 @@
 .mat-spinner path{
     stroke:gray !important;
 }
+.modal-header{
+    background: darkgray;
+    color: white;
+}
+.modal-body{
+    padding:50px auto;
+    border-bottom: 1px solid lightgray;
+}
+
+.modal-footer{
+    padding: 5px;
+}
+.assigned-requests{
+    font-size: 15px;
+    display: inline;
+
+}
+h4{
+    display: inline;
+    font-weight: bold;
+}
+.btn .btn-secondary{
+    background: black !important;
+}
+.btn:hover{
+    background: black;
+    color: white;
+}
